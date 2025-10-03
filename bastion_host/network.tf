@@ -1,18 +1,18 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = local.vpn_name
-  cidr = local.vpn_cidr
+  name = local.vpc_name
+  cidr = module.global.vpc_cidr
 
   azs             = [data.aws_availability_zones.available.names[0]]
-  public_subnets  = [cidrsubnet(local.vpn_cidr, 8, 0)]
-  private_subnets = [cidrsubnet(local.vpn_cidr, 8, 1)]
+  public_subnets  = [cidrsubnet(module.global.vpc_cidr, 8, 0)]
+  private_subnets = [cidrsubnet(module.global.vpc_cidr, 8, 1)]
 
   enable_nat_gateway = false
   single_nat_gateway = false
 
   tags = {
-    "Name" = local.vpn_name
+    "Project" = module.global.common_tags["Project"]
   }
 }
 

@@ -13,7 +13,8 @@ resource "aws_instance" "bastion_host" {
   key_name = aws_key_pair.bastion_host_key.key_name
 
   tags = {
-    "Name" = "bastion_host"
+    "Name"    = "bastion_host",
+    "Project" = module.global.common_tags["Project"]
   }
 }
 
@@ -27,6 +28,7 @@ resource "aws_instance" "private_host" {
   key_name = aws_key_pair.bastion_host_key.key_name
 
   tags = {
-    "Name" = "private_host"
+    "Name"    = "private_host",
+    "Project" = module.global.common_tags["Project"]
   }
 }
