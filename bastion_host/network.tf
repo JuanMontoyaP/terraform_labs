@@ -10,10 +10,6 @@ module "vpc" {
 
   enable_nat_gateway = false
   single_nat_gateway = false
-
-  tags = {
-    "Project" = module.global.common_tags["Project"]
-  }
 }
 
 resource "aws_security_group" "bastion_host" {
