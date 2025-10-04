@@ -8,7 +8,7 @@ variable "cidr_block" {
   type        = string
 }
 
-variable "project_name" {
-  description = "Project tag for resources"
+variable "igw_id" {
+  description = "The ID of the Internet Gateway to associate with the route table"
   type        = string
 }

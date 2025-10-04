@@ -1,5 +1,5 @@
 resource "aws_instance" "bastion_host" {
-  ami           = data.aws_ami.ubuntu.id
+  ami           = module.global.ubuntu_ami_id
   instance_type = var.instance_type
 
   subnet_id                   = module.vpc.public_subnets[0]
@@ -18,7 +18,7 @@ resource "aws_instance" "bastion_host" {
 }
 
 resource "aws_instance" "private_host" {
-  ami           = data.aws_ami.ubuntu.id
+  ami           = module.global.ubuntu_ami_id
   instance_type = var.instance_type
 
   subnet_id       = module.vpc.private_subnets[0]

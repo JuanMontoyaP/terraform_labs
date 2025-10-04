@@ -4,7 +4,7 @@ module "vpc" {
   name = local.vpc_name
   cidr = module.global.vpc_cidr
 
-  azs             = [data.aws_availability_zones.available.names[0]]
+  azs             = [module.global.availability_zones[0]]
   public_subnets  = [cidrsubnet(module.global.vpc_cidr, 8, 0)]
   private_subnets = [cidrsubnet(module.global.vpc_cidr, 8, 1)]
 
