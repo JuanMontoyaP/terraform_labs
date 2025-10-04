@@ -5,11 +5,6 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "aws_profile" {
-  description = "The AWS profile to use for authentication"
-  type        = string
-}
-
 # Variables for compute
 variable "instance_type" {
   description = "The type of instance to use for the bastion host"
