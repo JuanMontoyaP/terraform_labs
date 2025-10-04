@@ -4,6 +4,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  WORKSPACE: ./bastion_host
 
 permissions:
   id-token: write
@@ -14,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Greeting
-        run: echo "Hello, World!"
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -26,3 +27,12 @@ jobs:
 
       - name: STS GetCallerIdentity
         run: aws sts get-caller-identity
+
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ env.WORKSPACE }}
