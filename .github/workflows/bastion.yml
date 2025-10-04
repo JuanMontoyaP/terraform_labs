@@ -1,38 +1,64 @@
 name: Deploy Bastion Host
 on:
   workflow_dispatch:
+    inputs:
+      terraform_action:
+        description: "Terraform action to perform"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
 
 env:
   AWS_REGION: us-east-1
-  WORKSPACE: ./bastion_host
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./bastion_host
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: arn:aws:iam::760508986718:role/gh-actions-role
+          role-to-assume: arn:aws:iam::760508986718:role/bastion_role
           role-session-name: GitHubActions_tf_labs
           aws-region: ${{ env.AWS_REGION }}
-
-      - name: STS GetCallerIdentity
-        run: aws sts get-caller-identity
 
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.13.3
 
+      - name: Terraform fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ env.WORKSPACE }}
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: ${{ github.event.inputs.terraform_action == 'plan' || github.event.inputs.terraform_action == 'apply' }}
+        run: terraform plan -out=tfplan -input=false
+
+      - name: Terraform Apply
+        if: ${{ github.event.inputs.terraform_action == 'apply' }}
+        run: terraform apply -input=false tfplan
+
+      - name: Terraform Destroy
+        if: ${{ github.event.inputs.terraform_action == 'destroy' }}
+        run: terraform destroy -auto-approve
