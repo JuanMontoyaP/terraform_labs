@@ -32,7 +32,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: arn:aws:iam::760508986718:role/bastion_role
+          role-to-assume: arn:aws:iam::760508986718:role/gh-actions-role
           role-session-name: GitHubActions_tf_labs
           aws-region: ${{ env.AWS_REGION }}
 
