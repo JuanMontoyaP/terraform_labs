@@ -6,8 +6,6 @@ Resources:
     Type: "AWS::S3::Bucket"
     Properties:
       BucketName: "tf-labs-state-juan"
-      VersioningConfiguration:
-        Status: "Disabled"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
