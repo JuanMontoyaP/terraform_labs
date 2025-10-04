@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "S3 and DynamoDB Backend for Terraform State"
+
+Resources:
+  TerraformStateBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "tf-labs-state-juan"
+      VersioningConfiguration:
+        Status: "Disabled"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+    DeletionPolicy: Retain
+
+  TerraformLockTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "tf-labs-locks-juan"
+      AttributeDefinitions:
+        - AttributeName: "LockID"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "LockID"
+          KeyType: "HASH"
+      BillingMode: "PAY_PER_REQUEST"
+    DeletionPolicy: Retain
+
+Outputs:
+  TerraformStateBucketName:
+    Description: Name of the S3 bucket for Terraform state
+    Value: !Ref TerraformStateBucket
+
+  TerraformLockTableName:
+    Description: Name of the DynamoDB table for Terraform locks
+    Value: !Ref TerraformLockTable
