@@ -12,3 +12,13 @@ variable "igw_id" {
   description = "The ID of the Internet Gateway to associate with the route table"
   type        = string
 }
+
+variable "prefix" {
+  description = "A prefix to use for all resource names"
+  type        = string
+}
+
+variable "availability_zone" {
+  description = "The availability zone for the subnet"
+  type        = string
+}
