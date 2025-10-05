@@ -57,7 +57,7 @@ jobs:
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.terraform_action == 'apply' }}
-        run: terraform apply -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}" tfplan -input=false --auto-approve
+        run: terraform apply -input=false -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}" --auto-approve tfplan
 
       - name: Terraform Output
         if: ${{ github.event.inputs.terraform_action == 'apply' }}
