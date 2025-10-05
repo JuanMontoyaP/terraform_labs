@@ -46,19 +46,4 @@ data "aws_iam_policy_document" "gh-actions-tf-policy" {
       "arn:aws:s3:::tf-labs-state-juan/*",
     ]
   }
-
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "dynamodb:DescribeTable",
-      "dynamodb:GetItem",
-      "dynamodb:PutItem",
-      "dynamodb:DeleteItem"
-    ]
-
-    resources = [
-      "arn:aws:dynamodb:*:*:table/tf-labs-locks-juan"
-    ]
-  }
 }
