@@ -1,5 +1,13 @@
 terraform {
   required_version = "~> 1.13.3"
+
+  backend "s3" {
+    bucket         = "tf-labs-state-juan"
+    key            = "aws_roles/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "tf-labs-locks-juan"
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

@@ -16,3 +16,9 @@ variable "instance_type" {
   type        = string
   default     = "t3.micro"
 }
+
+variable "user_arn" {
+  description = "The ARN of the user to allow SSH access to the bastion host"
+  type        = string
+
+}

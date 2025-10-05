@@ -1,6 +1,6 @@
 resource "aws_iam_role" "bastion_role" {
   name               = "bastion_role"
-  assume_role_policy = data.aws_iam_policy_document.gh-actions-trust-policy.json
+  assume_role_policy = data.aws_iam_policy_document.bastion-trust-policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "bastion-attachment" {
