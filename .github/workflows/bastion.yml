@@ -57,7 +57,7 @@ jobs:
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.terraform_action == 'apply' }}
-        run: terraform apply -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}" tfplan -input=false
+        run: terraform apply -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}" tfplan -input=false --auto-approve
 
       - name: Terraform Output
         if: ${{ github.event.inputs.terraform_action == 'apply' }}
@@ -65,4 +65,4 @@ jobs:
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.terraform_action == 'destroy' }}
-        run: terraform destroy -input=false -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}"
+        run: terraform destroy -input=false -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}" --auto-approve
