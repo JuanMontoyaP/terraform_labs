@@ -19,6 +19,11 @@ terraform {
 provider "aws" {
   region = var.aws_region
 
+  assume_role {
+    role_arn     = var.aws_role_arn
+    session_name = "TerraformSession"
+  }
+
   default_tags {
     tags = module.global.common_tags
   }

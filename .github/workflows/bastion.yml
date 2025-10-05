@@ -32,7 +32,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
-          role-to-assume: arn:aws:iam::760508986718:role/gh-actions-role
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           role-session-name: GitHubActions_tf_labs
           aws-region: ${{ env.AWS_REGION }}
 
@@ -53,11 +53,11 @@ jobs:
 
       - name: Terraform Plan
         if: ${{ github.event.inputs.terraform_action == 'plan' || github.event.inputs.terraform_action == 'apply' }}
-        run: terraform plan -out=tfplan -input=false
+        run: terraform plan -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}" -out=tfplan -input=false
 
       - name: Terraform Apply
         if: ${{ github.event.inputs.terraform_action == 'apply' }}
-        run: terraform apply -input=false tfplan
+        run: terraform apply -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}" tfplan -input=false
 
       - name: Terraform Output
         if: ${{ github.event.inputs.terraform_action == 'apply' }}
@@ -65,4 +65,4 @@ jobs:
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.terraform_action == 'destroy' }}
-        run: terraform destroy -auto-approve
+        run: terraform destroy -input=false -var="aws_role_arn=${{ secrets.AWS_BASTION_ROLE_ARN }}"
