@@ -1,5 +1,11 @@
 name: Deploy Auto Scaling Group with Load Balancer
 on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "main"
   workflow_dispatch:
     inputs:
       terraform_action:
@@ -18,6 +24,7 @@ env:
 permissions:
   id-token: write
   contents: read
+  pull-requests: write
 
 jobs:
   terraform:
@@ -49,3 +56,31 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
+
+      - name: Terraform Plan
+        id: terraform_plan
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.terraform_action == 'plan' || github.event.inputs.terraform_action == 'apply' }}
+        run: terraform plan -var="aws_role_arn=${{ secrets.AWS_EC2_ROLE }}" -out=tfplan -input=false
+
+      - name: Comment Plan on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: terraform plan result
+          message: |
+            **Terraform Plan** for commit `${{ github.sha }}`**:
+            ```hcl
+            ${{ steps.terraform_plan.outputs.stdout }}
+            ```
+
+      - name: Terraform Apply
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.terraform_action == 'apply' && github.ref == 'refs/heads/main' }}
+        run: terraform apply -input=false -var="aws_role_arn=${{ secrets.AWS_EC2_ROLE }}" --auto-approve tfplan
+
+      - name: Terraform Output
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.terraform_action == 'apply' && github.ref == 'refs/heads/main' }}
+        run: terraform output
+
+      - name: Terraform Destroy
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.terraform_action == 'destroy' && github.ref == 'refs/heads/main' }}
+        run: terraform destroy -input=false -var="aws_role_arn=${{ secrets.AWS_EC2_ROLE }}" --auto-approve
