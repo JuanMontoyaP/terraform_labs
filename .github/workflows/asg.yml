@@ -57,8 +57,9 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
+        id: terraform_plan
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.terraform_action == 'plan' }}
-        run: terraform plan -out=tfplan -input=false
+        run: terraform plan -var="aws_role_arn=${{ secrets.AWS_EC2_ROLE }}" -out=tfplan -input=false
 
       - name: Comment Plan on PR
         if: github.event_name == 'pull_request'
@@ -68,5 +69,5 @@ jobs:
           message: |
             **Terraform Plan** for commit `${{ github.sha }}`**:
             ```hcl
-            ${{ steps.terraform-plan.outputs.stdout }}
+            ${{ steps.terraform_plan.outputs.stdout }}
             ```
