@@ -10,14 +10,18 @@ data "aws_iam_policy_document" "gh-actions-trust-policy" {
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
     condition {
-      test     = "StringEquals"
+      test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:JuanMontoyaP/terraform_labs:ref:refs/heads/main"]
+      values = [
+        "repo:JuanMontoyaP/terraform_labs:ref:refs/heads/*",
+        "repo:JuanMontoyaP/terraform_labs:ref:refs/tags/*",
+        "repo:JuanMontoyaP/terraform_labs:pull_request"
+      ]
     }
   }
 }
 
-data "aws_iam_policy_document" "bastion-trust-policy" {
+data "aws_iam_policy_document" "ec2-trust-policy" {
   statement {
     effect = "Allow"
 
