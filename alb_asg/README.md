@@ -17,7 +17,7 @@ The following resources are going to be created:
 1. An internet gateway and routing policies to enable internet access for the public subnets.
 1. A NAT gateway for each private subnet to enable internet access for the private subnets.
 
-![aws_architecture](./docs/alb_asg.png)
+![aws_architecture](./docs/alb_asg_aws.png)
 
 ## Usage
 1. Create a file called `terraform.tfvars` and specify the following variable:
