@@ -2,7 +2,7 @@ name: Deploy Auto Scaling Group with Load Balancer
 on:
   push:
     branches:
-      - "*"
+      - "main"
   pull_request:
     branches:
       - "main"
